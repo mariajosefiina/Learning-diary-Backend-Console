@@ -87,20 +87,23 @@ namespace Learning_diary_Maria
                 topicCollection.Add(new Topic(topic.Id, topic.Title, topic.Description, topic.EstimatedTimeToMaster, topic.TimeSpent, topic.Source, topic.StartLearningDay, topic.CompletionDay, topic.InProgress));
 
                 //Printing the user inputted object to file 
-                string path = @"C:\Users\Maria T\source\repos\Learning diary\Learning diary";
+                string path = @"C:\Users\Maria T\source\repos\Learning diary\Topic.txt";
                 if (!File.Exists(path))
                 {
+
                     using (System.IO.StreamWriter sw = File.CreateText(path))
                     {
                         sw.WriteLine(topic.Id.ToString() + " " + topic.Title + " " + topic.Description + " " + topic.EstimatedTimeToMaster.ToString() + " " + topic.TimeSpent.ToString() + " " + topic.Source +
                         " " + topic.StartLearningDay.ToString() + " " + topic.CompletionDay.ToString() + " " + topic.InProgress.ToString());
                     }
-                    Console.WriteLine("The topic is saved to your learning diary.");
+
                 }
 
+              
 
+                    }
 
+                }
             }
         }
-    }
-}
+    
