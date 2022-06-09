@@ -1,0 +1,16 @@
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\bin\Debug\net5.0\Learning diary Maria.exe
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\bin\Debug\net5.0\Learning diary Maria.deps.json
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\bin\Debug\net5.0\Learning diary Maria.runtimeconfig.json
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\bin\Debug\net5.0\Learning diary Maria.runtimeconfig.dev.json
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\bin\Debug\net5.0\Learning diary Maria.dll
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\bin\Debug\net5.0\ref\Learning diary Maria.dll
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\bin\Debug\net5.0\Learning diary Maria.pdb
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\Learning diary Maria.csproj.AssemblyReference.cache
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\Learning diary Maria.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\Learning diary Maria.AssemblyInfoInputs.cache
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\Learning diary Maria.AssemblyInfo.cs
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\Learning diary Maria.csproj.CoreCompileInputs.cache
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\Learning diary Maria.dll
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\ref\Learning diary Maria.dll
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\Learning diary Maria.pdb
+C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\obj\Debug\net5.0\Learning diary Maria.genruntimeconfig.cache
