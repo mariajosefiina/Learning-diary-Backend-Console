@@ -1,1 +1,27 @@
-2 Cats Cats are cute animals 25 20 www.cat.net 08/04/2022 0.00.00 11/06/2022 0.00.00 False
+0
+ Dogs
+ Dogs are the absolute cutest
+ 20
+ 2
+ www.dognet.com
+ 02/02/2022 0.00.00
+08/06/2022 0.00.00
+ True
+2
+ Cats
+ Cats are cute
+ 200
+ 20
+ www.catnet.com
+ 06/06/2022 0.00.00
+09/09/2022 0.00.00
+ False
+3
+ Butteflies
+ Butterflies are insects
+ 300
+ 30
+ www.google.com
+ 04/05/2022 0.00.00
+11/09/2022 0.00.00
+ False

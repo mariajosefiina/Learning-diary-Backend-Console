@@ -45,7 +45,7 @@ namespace Learning_diary_Maria
                 Topic topic = new Topic();
 
                 //Asking user for the topic properties
-                Console.WriteLine("Enter the topic id number: ");
+                Console.WriteLine("Enter the topic id number, e.g. 0: ");
                 topic.Id = int.Parse(Console.ReadLine());
 
                 Console.WriteLine("Enter the title of the topic: ");
@@ -65,10 +65,10 @@ namespace Learning_diary_Maria
                 Console.WriteLine("Enter the source of the topic (e.g. a website) :");
                 topic.Source = Console.ReadLine();
 
-                Console.WriteLine("What date did you start learning this?");
+                Console.WriteLine("What date did you start learning this? Write the date in dd/mm/yyyy format.");
                 topic.StartLearningDay = DateTime.Parse(Console.ReadLine());
 
-                Console.WriteLine("What day have you completed the subject?");
+                Console.WriteLine("What day have you completed the subject? Write the date in dd/mm/yyyy format.");
                 topic.CompletionDay = DateTime.Parse(Console.ReadLine());
 
                 //Checking if the studies are in progress by comparing the finishing date to today's date.
@@ -90,8 +90,17 @@ namespace Learning_diary_Maria
                 string path = @"C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\Topic.txt";
                 if (!File.Exists(path))
                 {
-
-                    using (System.IO.StreamWriter sw = File.CreateText(path))
+                    
+                    using (System.IO.StreamWriter sw = File.AppendText(path))
+                    {
+                        sw.WriteLine(topic.Id.ToString() + "\n " + topic.Title + "\n " + topic.Description + "\n " + topic.EstimatedTimeToMaster.ToString() + "\n " + topic.TimeSpent.ToString() + "\n " + topic.Source +
+                        "\n " + topic.StartLearningDay.ToString() + "\n" + topic.CompletionDay.ToString() + "\n " + topic.InProgress.ToString());
+                    }
+                    Console.WriteLine("Your topic was saved to the learning diary!");
+                }
+                else 
+                {
+                    using (System.IO.StreamWriter sw = File.AppendText(path))
                     {
                         sw.WriteLine(topic.Id.ToString() + "\n " + topic.Title + "\n " + topic.Description + "\n " + topic.EstimatedTimeToMaster.ToString() + "\n " + topic.TimeSpent.ToString() + "\n " + topic.Source +
                         "\n " + topic.StartLearningDay.ToString() + "\n" + topic.CompletionDay.ToString() + "\n " + topic.InProgress.ToString());
