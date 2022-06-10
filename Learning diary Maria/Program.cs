@@ -36,7 +36,7 @@ namespace Learning_diary_Maria
                 try
 
                 {
-                    string path = @"C:\Users\Maria T\source\repos\Learning diary\Topic.txt";
+                    string path = @"C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\Topic.txt";
                     using (var sr = new StreamReader(path))
                     {
                         Console.WriteLine(sr.ReadToEnd());
