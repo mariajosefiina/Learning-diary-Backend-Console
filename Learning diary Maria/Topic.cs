@@ -34,9 +34,8 @@ namespace Learning_diary_Maria
             CompletionDay = completionDay;
             InProgress = inProgress;
 
-
-
         }
+
 
 
     }
