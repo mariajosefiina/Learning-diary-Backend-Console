@@ -24,18 +24,26 @@ namespace Learning_diary_Maria
            string source, DateTime startLearningDay, DateTime completionDay, bool inProgress)
         {
 
-            Id = id;
-            Title = title;
-            Description = description;
-            EstimatedTimeToMaster = estimatedTimeToMaster;
-            TimeSpent = timeSpent;
-            Source = source;
-            StartLearningDay = startLearningDay;
-            CompletionDay = completionDay;
-            InProgress = inProgress;
+           this.Id = id;
+           this.Title = title;
+           this.Description = description;
+           this.EstimatedTimeToMaster = estimatedTimeToMaster;
+           this.TimeSpent = timeSpent;
+           this.Source = source;
+           this.StartLearningDay = startLearningDay;
+           this.CompletionDay = completionDay;
+           this.InProgress = inProgress;
 
         }
 
+
+        public override string ToString()
+        {
+            return "Topic Id: " + Id + ". Topic title: " + Title + ". Description of the topic: " + Description + ". Estimated time to master this topic is: "
+            + EstimatedTimeToMaster + " hours, and you've spent : " + TimeSpent + " hours. " +
+            "The source of the topic is: " + Source + ". You started learning the topic on: " + StartLearningDay +
+            " and you will finish on " + CompletionDay; 
+            }
 
 
     }

@@ -17,15 +17,15 @@ namespace Learning_diary_Maria
             Console.WriteLine("Or if you'd like to search for a topic based on its topic Id, write C.");
 
             string userInput = Console.ReadLine().ToLower();
-            const string a = "a";
-            const string b = "b";
-            const string c = "c";
-
 
             if (userInput == "a")
 
             {
                 AddTopic();
+                //foreach (Topic topic in topicCollection)
+                //{
+                //    Console.WriteLine(topic.Id);
+                //}
             }
 
             else if (userInput == "b")
@@ -47,26 +47,33 @@ namespace Learning_diary_Maria
                 }
             }
 
-            else if (userInput == "c")
+            else if (userInput == "c") //tulkitse tekstitiedoston sisältö topic-olioiksi -> txt. revi sieltä joka 8. rivi... lue tekstitiedosto arrayhyn -8 rivin välein..
             {
+                string path = @"C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\Topic.txt";
 
-                foreach (Topic topics in topicCollection)
+                string lines = File.ReadAllText(path);
+
+                string [] lineArray = lines.Split(',');
+                Topic testTopic = new Topic(Int32.Parse(lineArray[0]), lineArray[1], lineArray[2], Double.Parse(lineArray[3]), Double.Parse(lineArray[4]), 
+                  lineArray[5], DateTime.Parse(lineArray[6]), DateTime.Parse(lineArray[7]), bool.Parse(lineArray[8]));
+
+                topicCollection.Add(testTopic);
+
+                //Console.WriteLine("Which topic id would you like to look up?");
+                //int userSearch = Int32.Parse(Console.ReadLine());
+
+
+                List<string> outContents = new List<string>();
+
+                foreach (Topic aTopic in topicCollection)
                 {
-                    Console.WriteLine(topics.Title + " " + topics.Id + " " + topics.Description);
+                    outContents.Add(aTopic.ToString());
                 }
 
-                //Console.WriteLine("What topic Id would you like to look for? ");
-                //int searchId = Int32.Parse(Console.ReadLine());
 
-                //if (topicCollection.Contains(topicId(searchId)))
-                //{
-                //    Console.WriteLine("The topic was found!");
-                //}
+                string outFile = @"C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\outFile.txt";
+                File.WriteAllLines(outFile, outContents);
 
-                //else
-                //{
-                //    Console.WriteLine("Topic Id was not found! :(");
-                //}
             }
 
             else
@@ -91,11 +98,11 @@ namespace Learning_diary_Maria
                 string description = Console.ReadLine();
 
 
-                Console.WriteLine("Enter the estimated time to master this topic (in number of hours, e.g. 5): ");
-                int estimatedTimeToMaster = int.Parse(Console.ReadLine());
+                Console.WriteLine("Enter the estimated time to master this topic (in number of hours, e.g. 5.5): ");
+                double estimatedTimeToMaster = Convert.ToDouble(Console.ReadLine());
 
-                Console.WriteLine("Enter the time spent (in number of hours, e.g. 5) : ");
-                double timeSpent = double.Parse(Console.ReadLine());
+                Console.WriteLine("Enter the time spent (in number of hours, e.g. 5.2) : ");
+                double timeSpent = Convert.ToDouble(Console.ReadLine());
 
                 Console.WriteLine("Enter the source of the topic (e.g. a website URL) :");
                 string source = Console.ReadLine();
@@ -133,8 +140,8 @@ namespace Learning_diary_Maria
 
                     using (System.IO.StreamWriter sw = File.AppendText(path))
                     {
-                        sw.WriteLine(topic.Id.ToString() + "\n " + topic.Title + "\n " + topic.Description + "\n " + topic.EstimatedTimeToMaster.ToString() + "\n " + topic.TimeSpent.ToString() + "\n " + topic.Source +
-                        "\n " + topic.StartLearningDay.ToString() + "\n" + topic.CompletionDay.ToString() + "\n " + topic.InProgress.ToString());
+                        sw.WriteLine(topic.Id.ToString() + "\n," + topic.Title + "\n," + topic.Description + "\n," + topic.EstimatedTimeToMaster.ToString() + "\n," + topic.TimeSpent.ToString() + "\n," + topic.Source +
+                        "\n," + topic.StartLearningDay.ToString() + "\n," + topic.CompletionDay.ToString() + "\n," + topic.InProgress.ToString() + "\n,");
                     }
                     Console.WriteLine("Your topic was saved to the learning diary!");
                 }
@@ -142,8 +149,8 @@ namespace Learning_diary_Maria
                 {
                     using (System.IO.StreamWriter sw = File.AppendText(path))
                     {
-                        sw.WriteLine(topic.Id.ToString() + "\n " + topic.Title + "\n " + topic.Description + "\n " + topic.EstimatedTimeToMaster.ToString() + "\n " + topic.TimeSpent.ToString() + "\n " + topic.Source +
-                        "\n " + topic.StartLearningDay.ToString() + "\n" + topic.CompletionDay.ToString() + "\n " + topic.InProgress.ToString());
+                        sw.WriteLine(topic.Id.ToString() + "\n," + topic.Title + "\n," + topic.Description + "\n," + topic.EstimatedTimeToMaster.ToString() + "\n," + topic.TimeSpent.ToString() + "\n," + topic.Source +
+                        "\n," + topic.StartLearningDay.ToString() + "\n," + topic.CompletionDay.ToString() + "\n," + topic.InProgress.ToString() + "\n,");
                     }
                     Console.WriteLine("Your topic was saved to the learning diary!");
 
