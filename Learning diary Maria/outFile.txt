@@ -1,4 +1,0 @@
-Topic Id: 1. Topic title: Peaches
-. Description of the topic: Peaches are fruits
-. Estimated time to master this topic is: 4 hours, and you've spent : 1 hours. The source of the topic is: peachnet.net
-. You started learning the topic on: 11/02/2022 0.00.00 and you will finish on 13/04/2022 0.00.00

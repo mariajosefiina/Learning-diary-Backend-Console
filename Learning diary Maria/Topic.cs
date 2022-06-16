@@ -37,14 +37,7 @@ namespace Learning_diary_Maria
         }
 
 
-        public override string ToString()
-        {
-            return "Topic Id: " + Id + ". Topic title: " + Title + ". Description of the topic: " + Description + ". Estimated time to master this topic is: "
-            + EstimatedTimeToMaster + " hours, and you've spent : " + TimeSpent + " hours. " +
-            "The source of the topic is: " + Source + ". You started learning the topic on: " + StartLearningDay +
-            " and you will finish on " + CompletionDay; 
-            }
-
+        
 
     }
 }
