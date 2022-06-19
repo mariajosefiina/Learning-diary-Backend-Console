@@ -1,2 +1,3 @@
 1,Dogs,Dogs are fluffy pets,20.5,19.5,www.dognet.com,02/02/2022 0.00.00,12/07/2022 0.00.00,False,
 2,Cats,Cats are adorable,17.5,13,catnet.com,12/09/2021 0.00.00,13/05/2022 0.00.00,True,
+3,Hats,Hats are accessories,19.5,12.5,www.hats.net,12/03/2022 0.00.00,12/05/2022 0.00.00,True,

@@ -16,8 +16,9 @@ namespace Learning_diary_Maria
             // Asking the user what they would like to do and executing the action via if-statements.
             Console.WriteLine("Write A, if you'd like to create a new topic to your learning diary.");
             Console.WriteLine("Write B, if you'd like to see all your topics and their contents.");
-            Console.WriteLine("Write C, if you'd like to search for a topic based on its topic Id");
+            Console.WriteLine("Write C, if you'd like to search for a topic based on its topic Id.");
             Console.WriteLine("Write D, if you'd like to change a field in a specific topic Id.");
+            Console.WriteLine("Write E, if you'd like to delete a topic based on its topic Id.");
             
             string userInput = Console.ReadLine().ToLower();
 
@@ -46,15 +47,19 @@ namespace Learning_diary_Maria
                 ChangeIdField(search);
             }
 
+            else if (userInput == "e")
+            {
+                Console.WriteLine("What topic Id would you like to delete? Write a number, e.g. 5.");
+                int search = Convert.ToInt32(Console.ReadLine());
+                DeleteId(search);
+            }
+
             else
             {
                 Console.WriteLine("Please write either A, B, C, D or E.");
             }
 
-
-
             //*******METHODS**********
-
 
 
             void AddTopic()
@@ -147,27 +152,32 @@ namespace Learning_diary_Maria
                     savedObjects.Add(testTopic);
                 }
 
-                // Now we check whether the topic Id exists in the new list savedObjects. We use an IEnumerable, an interface for my savedObjects list.
+                // Now we check whether the topic Id exists in the new list savedObjects. To use the if statement, I needed linq "Any" command. But to get out the correct Id topic, I needed to loop the list
+                // through an interface.
 
-                IEnumerable<Topic> searchId = savedObjects.Where(savedobject=> savedobject.Id == search);
-                
-                foreach (Topic topic in searchId)
-                    {
-                        Console.WriteLine("The topic Id {0} was found, and it is connected to the topic called {1}", topic.Id, topic.Title);
+                if (savedObjects.Any(savedobject => savedobject.Id == search))
+
+                {
+                    IEnumerable<Topic> searchId = savedObjects.Where(savedobject => savedobject.Id == search);
+                    foreach (Topic topic in searchId)
+                    { 
+                        Console.WriteLine("The topic Id {0} was found, and it is connected to the topic called {1}", search, topic.Title); 
                     }
                     
+                }
+                else
+                { 
+                    Console.WriteLine("The learning diary does not contain topics with that id :(");
+                }
+
+
+
             }
             
             void ChangeIdField(int search)
+            // If input is d, the topic list in text file is opened. I want to read the file and split its content to Topic class objects based on comma ,. Then I save them to a new list called savedObjects.
             {
-                
-                Console.WriteLine("What field would you like to change?");
-                Console.WriteLine("Write A, if you want to change the topic title.\nWrite B, if you want to change the topic description.\nWrite C, if you'd like to change the estimated finishing date.");
-                char userInput = Convert.ToChar(Console.ReadLine().ToLower());
-                
-
                 string path = @"C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\Topic.txt";
-
                 List<Topic> savedObjects = new List<Topic>();
                 foreach (string line in File.ReadLines(path))
 
@@ -178,48 +188,90 @@ namespace Learning_diary_Maria
                     savedObjects.Add(testTopic);
                 }
 
-                if (userInput == 'a')
-                {
-                    Console.WriteLine("What do you want to change the title to?");
-                    string newTitle = Console.ReadLine();
+                // Now we check whether the topic Id exists in the new list savedObjects. Only if it does, we can move on to the next part where I ask the user for update fields and input.
+                // Else, use is informed that the topic id does not exist in the learning diary. 
 
-                    IEnumerable<string> changeTitle = savedObjects.Where(savedobject => savedobject.Id.Equals(search)).Select(savedobject => savedobject.Title.Replace(savedobject.Title, newTitle));
-                    foreach (string title in changeTitle)
+                if (savedObjects.Any(savedobject => savedobject.Id == search))
+
+                {
+                    Console.WriteLine("Write A, if you want to change the topic title.\nWrite B, if you want to change the topic description.\nWrite C, if you'd like to change the estimated finishing date.");
+                    char userInput = Convert.ToChar(Console.ReadLine().ToLower());
+
+                    //Currently, the changes are not printed to a txt file, but you can see that the code works by putting breakpoints to the if statements and seeing how the object values change.
+
+                    if (userInput == 'a')
                     {
-                        Console.WriteLine("The topic with Id {0} has now been switched to {1}", search, title);
+                        Console.WriteLine("What do you want to change the title to?");
+                        string newTitle = Console.ReadLine();
+
+                        IEnumerable<string> changeTitle = savedObjects.Where(savedobject => savedobject.Id.Equals(search)).Select(savedobject => savedobject.Title = newTitle);
+                        foreach (string title in changeTitle)
+                        {
+                            Console.WriteLine("The topic with Id {0} has now been switched to {1}", search, title);
+                        }
+
                     }
 
-                }
-
-                if (userInput == 'b')
-                {
-                    Console.WriteLine("What do you want to change the description to?");
-                    string newDescription = Console.ReadLine();
-
-                    IEnumerable<string> changeDescription= savedObjects.Where(savedobject => savedobject.Id.Equals(search)).Select(savedobject => savedobject.Description.Replace(savedobject.Title, newDescription));
-                    foreach (string description in changeDescription)
+                    if (userInput == 'b')
                     {
-                        Console.WriteLine("The topic with Id {0} has now been switched to {1}", search, description);
+                        Console.WriteLine("What do you want to change the description to?");
+                        string newDescription = Console.ReadLine();
+
+                        IEnumerable<string> changeDescription = savedObjects.Where(savedobject => savedobject.Id.Equals(search)).Select(savedobject => savedobject.Description = newDescription);
+                        foreach (string description in changeDescription)
+                        {
+                            Console.WriteLine("The topic with Id {0} has now been switched to {1}", search, description);
+                        }
+                    }
+
+                    if (userInput == 'c')
+                    {
+                        Console.WriteLine("When is the new estimated finishing date?");
+                        DateTime newFinishDate = DateTime.Parse(Console.ReadLine());
+
+                        IEnumerable<DateTime> changeFinishDate = savedObjects.Where(savedobject => savedobject.Id.Equals(search)).Select(savedobject => savedobject.CompletionDay = newFinishDate);
+                        foreach (DateTime date in changeFinishDate)
+                        {
+                            Console.WriteLine("The topic with Id {0} has now been switched to {1}", search, newFinishDate);
+                        }
                     }
                 }
-
-                if (userInput == 'c')
+                else
                 {
-                    Console.WriteLine("When is the new estimated finishing date?");
-                    DateTime newFinishDate = DateTime.Parse(Console.ReadLine());
-
-                    IEnumerable<string> changeFinishDate = savedObjects.Where(savedobject => savedobject.Id.Equals(search)).Select(savedobject => savedobject.CompletionDay.ToString().Replace(savedobject.CompletionDay.ToString(), newFinishDate.ToString()));
-
+                    Console.WriteLine("The learning diary does not contain topics with that id :(");
                 }
-                  
+            }
 
-                
+            void DeleteId(int search)
+            //Currently, the deletion is not printed to a txt file, but you can see that the code works by putting breakpoints to var removetopic-row and seeing how the object amount changes.
+            {
+                string path = @"C:\Users\Maria T\source\repos\Learning diary Maria\Learning diary Maria\Topic.txt";
+                List<Topic> savedObjects = new List<Topic>();
+                foreach (string line in File.ReadLines(path))
+
+                {
+                    string[] lineArray = line.Split(',');
+                    Topic testTopic = new Topic(Int32.Parse(lineArray[0]), lineArray[1], lineArray[2], Double.Parse(lineArray[3]), Double.Parse(lineArray[4]),
+                    lineArray[5], DateTime.Parse(lineArray[6]), DateTime.Parse(lineArray[7]), bool.Parse(lineArray[8]));
+                    savedObjects.Add(testTopic);
+                }
 
 
-                // var changeId = saved.Objects.Where (o => o.Id.Replace('o.estimatedTimeToMaster, userinput) 
-                // description, estimatedTimetoMaster, a-kuvaus, b-käytetty aika c - completion day . HUOM rajapinnan kautta ei voida muuttaa listaa. eli tee enemmin savedObjects[1] = userinput
+                if (savedObjects.Any(savedobject => savedobject.Id == search))
+                {
+                   var removeTopic = savedObjects.RemoveAll(savedobject => savedobject.Id == search);
+                    
+                    Console.WriteLine("The topic with id {0} called {1} was removed.", search, removeTopic.ToString());
+                }
+
+                else
+                {
+                    Console.WriteLine("The learning diary does not contain topics with that id :(");
+                }
 
             }
+
+
 
 
         }
