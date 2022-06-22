@@ -11,10 +11,6 @@ namespace Learning_diary_Maria
 
         static void Main(string[] args)
         {
-            // Creating a list of Topic class objects
-            List<Topic> topicCollection = new List<Topic>();
-
-            // Asking the user what they would like to do and executing the action via if-statements.
             Console.WriteLine("Write A, if you'd like to create a new topic to your learning diary.");
             Console.WriteLine("Write B, if you'd like to see all your topics and their contents.");
             Console.WriteLine("Write C, if you'd like to search for a topic based on its topic Id.");
@@ -65,24 +61,9 @@ namespace Learning_diary_Maria
 
             void AddTopic()
             {
-                //If input is a, user is asked bunch of questions about the topic which are saved to object properties and saved to text file. An instance of Topic class is created.
-
-                //bool inProgress = completionDay.ToLocalTime() < DateTime.Now;
-                //if (inProgress == true)
-                //{
-                //    Console.WriteLine("You have completed studying the topic!");
-                //}
-
-                //else if (inProgress == false)
-                //{
-                //    Console.WriteLine("You are still in the middle of studying the topic.");
-                //}
-
 
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                 {
-
-                    //Creating a new object of topic class
                     Models.Topic test = new Models.Topic();
 
                     Console.WriteLine("Enter the topic id number (e.g. 0): ");
@@ -130,7 +111,6 @@ namespace Learning_diary_Maria
                     Console.WriteLine("Your topic was saved to the learning diary!");
 
                 }
-
 
             }
 
