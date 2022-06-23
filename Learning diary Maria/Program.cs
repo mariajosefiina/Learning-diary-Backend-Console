@@ -164,7 +164,7 @@ namespace Learning_diary_Maria
                     if (savedTopics.Any(savedobject => savedobject.Id == search))
 
                     {
-                        Console.WriteLine("Write A, if you want to change the topic title.\nWrite B, if you want to change the topic description.\nWrite C, if you'd like to change the estimated finishing date.");
+                        Console.WriteLine("What title would you like to switch?\nA- Topic title\nB- Topic description\nC- Estimated time to master\nD- Estimated new finishing date");
                         char userInput = Convert.ToChar(Console.ReadLine().ToLower());
 
 
@@ -200,13 +200,30 @@ namespace Learning_diary_Maria
                             foreach (Models.Topic topic in changeDescription)
                             {
                                 topic.Description = newDescription;
-                                Console.WriteLine("The topic with Id {0} has now been switched to {1}", topic.Id, newDescription);
+                                Console.WriteLine("Your topic id {0} description has now been switched to {1}", topic.Id, newDescription);
                             }
                         }
+
 
                         TopicConnection.SaveChanges();
 
                         if (userInput == 'c')
+                        {
+                            //! Here I would like to receive comments: Would it have been a smoother execution to put this code bit in the very beginnig: TopicConnection.Topics.Where(topic => topic.Id == search).Single();
+                            // And afterwards do each field like I've done it here -> now my a b d options have a bit too many code rows that could be eliminated (although I enjoyed trying out different LINQ versions)?
+
+                            Console.WriteLine("What is the new estimated time to study this topic?");
+                            int newEstimatedTime = Convert.ToInt32(Console.ReadLine());
+
+                            var changeEstimatedTime = TopicConnection.Topics.Where(topic => topic.Id == search).Single();
+                            changeEstimatedTime.TimeToMaster = newEstimatedTime;
+                            Console.WriteLine("Your topic id {0} estimated time to master has now been switched to {1}", changeEstimatedTime.Id, newEstimatedTime);
+
+                        }
+                        TopicConnection.SaveChanges();
+
+
+                        if (userInput == 'd')
                         {
                             Console.WriteLine("When is the new estimated finishing date?");
                             DateTime newFinishDate = DateTime.Parse(Console.ReadLine());
@@ -218,10 +235,11 @@ namespace Learning_diary_Maria
                             foreach (Models.Topic topic in changeFinishDate)
                             {
                                 topic.CompletionDate = newFinishDate;
-                                Console.WriteLine("The topic with Id {0} has now been switched to {1}", search, newFinishDate);
+                                Console.WriteLine("Your topic id {0} new estimated finishing date has now been switched to {1}", topic.Id, newFinishDate);
                             }
                         }
                         TopicConnection.SaveChanges();
+
 
                     }
                     else
