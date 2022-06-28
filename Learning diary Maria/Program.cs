@@ -79,10 +79,10 @@ namespace Learning_diary_Maria
                     Console.WriteLine("Enter the description of the topic: ");
                     test.Description = Console.ReadLine();
 
-                    Console.WriteLine("Enter the estimated time to master this topic (in number of hours, e.g. 5): ");
+                    Console.WriteLine("Enter the estimated time to master this topic (in days, e.g. 5): ");
                     test.TimeToMaster = Convert.ToInt32(Console.ReadLine());
 
-                    Console.WriteLine("Enter the time spent (in number of hours, e.g. 2) : ");
+                    Console.WriteLine("Enter the time spent (in days, e.g. 2) : ");
                     test.TimeSpent = Convert.ToInt32(Console.ReadLine());
 
                     Console.WriteLine("Enter the source of the topic (e.g. a website URL) :");
