@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Learning_diary_Maria.Models;
+using ClassLibrary1;
+
 
 namespace Learning_diary_Maria
 {
@@ -61,6 +63,8 @@ namespace Learning_diary_Maria
 
             void AddTopic()
             {
+                
+
 
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                 {
@@ -90,20 +94,36 @@ namespace Learning_diary_Maria
                     Console.WriteLine("Are you still in the middle of your studies? Answer yes or no.");
                     string InProgress = Console.ReadLine().ToLower();
 
+                    DayCalculation dayCalculation = new DayCalculation();
+
                     if (InProgress == "yes")
                     {
-                        test.InProgress = true;
                         Console.WriteLine("Good luck with the studies!");
-
                     }
+
                     else if (InProgress == "no")
                     {
-                        test.InProgress = false;
+
                         Console.WriteLine("When did you finish studying this topic? (Write the date in dd/mm/yyyy format).");
                         test.CompletionDate = DateTime.Parse(Console.ReadLine());
-                        TimeSpan studyTime = (TimeSpan)(test.CompletionDate - test.StartLearningDate);
-                        Console.WriteLine("You spent a total of {0} days to study this topic.", studyTime.Days.ToString());
+
+                        var checkingDate = dayCalculation.IsFuture((DateTime)test.CompletionDate);
+                        test.InProgress = checkingDate;
+
+                        test.IsLate = dayCalculation.IsLate(test.StartLearningDate, test.CompletionDate, test.TimeToMaster);
+
+                        if (test.IsLate == true)
+                        {
+                            Console.WriteLine("You are late with your studies!");
+                        }
+
+                        else if (test.IsLate == false)
+                        {
+                            Console.WriteLine("You have finished the topic in time!");
+                        }
+
                     }
+
 
                     TopicConnection.Topics.Add(test);
                     TopicConnection.SaveChanges();
