@@ -18,124 +18,133 @@ namespace Learning_diary_Maria
             Console.WriteLine("Write C, if you'd like to search for a topic based on its topic Id.");
             Console.WriteLine("Write D, if you'd like to change a field in a specific topic Id.");
             Console.WriteLine("Write E, if you'd like to delete a topic based on its topic Id.");
-
+            
             string userInput = Console.ReadLine().ToLower();
-
+      
             if (userInput == "a")
-            {
-                AddTopic();
-            }
+                {
+                    AddTopic();
+                }
 
 
-            else if (userInput == "b")
-            {
-                PrintTopics();
-            }
+                else if (userInput == "b")
+                {
+                    PrintTopics();
+                }
 
-            else if (userInput == "c")
-            {
-                Console.WriteLine("What topic Id would you like to look for? Write a number, e.g. 5.");
-                int search = Convert.ToInt32(Console.ReadLine());
-                SearchId(search);
-            }
+                else if (userInput == "c")
+                {
+                    Console.WriteLine("What topic Id would you like to look for? Write a number, e.g. 5.");
+                    int search = Convert.ToInt32(Console.ReadLine()); //to-do: user input validation
+                    SearchId(search);
+                }
 
-            else if (userInput == "d")
-            {
-                Console.WriteLine("What topic Id would you like to change? Write a number, e.g. 5.");
-                int search = Convert.ToInt32(Console.ReadLine());
-                ChangeIdField(search);
-            }
+                else if (userInput == "d")
+                {
+                    Console.WriteLine("What topic Id would you like to change? Write a number, e.g. 5.");
+                    int search = Convert.ToInt32(Console.ReadLine()); //to-do: user input validation
+                    ChangeIdField(search);
+                }
 
-            else if (userInput == "e")
-            {
-                Console.WriteLine("What topic Id would you like to delete? Write a number, e.g. 5.");
-                int search = Convert.ToInt32(Console.ReadLine());
-                DeleteId(search);
-            }
+                else if (userInput == "e")
+                {
+                    Console.WriteLine("What topic Id would you like to delete? Write a number, e.g. 5.");
+                    int search = Convert.ToInt32(Console.ReadLine()); //To-do: user input validation
+                    DeleteId(search);
+                }
 
-            else
-            {
-                Console.WriteLine("Please write either A, B, C, D or E.");
-            }
+                else
+                {
+                    Console.WriteLine("Please write either A, B, C, D or E.");
+                }
+
 
             //*******METHODS**********
 
 
             void AddTopic()
             {
-                
+
 
 
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                 {
                     Models.Topic test = new Models.Topic();
-
-                    Console.WriteLine("Enter the topic id number (e.g. 0): ");
-                    test.Id = int.Parse(Console.ReadLine());
-
-                    Console.WriteLine("Enter the title of the topic: ");
-                    test.Title = Console.ReadLine();
-
-                    Console.WriteLine("Enter the description of the topic: ");
-                    test.Description = Console.ReadLine();
-
-                    Console.WriteLine("Enter the estimated time to master this topic (in days, e.g. 5): ");
-                    test.TimeToMaster = Convert.ToInt32(Console.ReadLine());
-
-                    Console.WriteLine("Enter the time spent (in days, e.g. 2) : ");
-                    test.TimeSpent = Convert.ToInt32(Console.ReadLine());
-
-                    Console.WriteLine("Enter the source of the topic (e.g. a website URL) :");
-                    test.Source = Console.ReadLine();
-
-                    Console.WriteLine("What date did you start learning this? (Write the date in dd/mm/yyyy format).");
-                    test.StartLearningDate = DateTime.Parse(Console.ReadLine());
-
-                    Console.WriteLine("Are you still in the middle of your studies? Answer yes or no.");
-                    string InProgress = Console.ReadLine().ToLower();
-
-                    DayCalculation dayCalculation = new DayCalculation();
-
-                    if (InProgress == "yes")
+                    while (true)
                     {
-                        Console.WriteLine("Good luck with the studies!");
-                    }
-
-                    else if (InProgress == "no")
-                    {
-
-                        Console.WriteLine("When did you finish studying this topic? (Write the date in dd/mm/yyyy format).");
-                        test.CompletionDate = DateTime.Parse(Console.ReadLine());
-
-                        var checkingDate = dayCalculation.IsFuture((DateTime)test.CompletionDate);
-                        test.InProgress = checkingDate;
-
-                        test.IsLate = dayCalculation.IsLate(test.StartLearningDate, test.CompletionDate, test.TimeToMaster);
-
-                        if (test.IsLate == true)
+                        try
                         {
-                            Console.WriteLine("You are late with your studies!");
-                        }
+                            Console.WriteLine("Enter the topic id number (e.g. 0): ");
+                            test.Id = int.Parse(Console.ReadLine());
 
-                        else if (test.IsLate == false)
+                            Console.WriteLine("Enter the title of the topic: ");
+                            test.Title = Console.ReadLine();
+
+                            Console.WriteLine("Enter the description of the topic: ");
+                            test.Description = Console.ReadLine();
+
+                            Console.WriteLine("Enter the estimated time to master this topic (in days, e.g. 5): ");
+                            test.TimeToMaster = Convert.ToInt32(Console.ReadLine());
+
+                            Console.WriteLine("Enter the time spent (in days, e.g. 2) : ");
+                            test.TimeSpent = Convert.ToInt32(Console.ReadLine());
+
+                            Console.WriteLine("Enter the source of the topic (e.g. a website URL) :");
+                            test.Source = Console.ReadLine();
+
+                            Console.WriteLine("What date did you start learning this? (Write the date in dd/mm/yyyy format).");
+                            test.StartLearningDate = DateTime.Parse(Console.ReadLine());
+
+                            Console.WriteLine("Are you still in the middle of your studies? Answer yes or no.");
+                            string InProgress = Console.ReadLine().ToLower();
+
+                            DayCalculation dayCalculation = new DayCalculation();
+
+                            if (InProgress == "yes")
+                            {
+                                Console.WriteLine("Good luck with the studies!");
+                            }
+
+                            else if (InProgress == "no")
+                            {
+
+                                Console.WriteLine("When did you finish studying this topic? (Write the date in dd/mm/yyyy format).");
+                                test.CompletionDate = DateTime.Parse(Console.ReadLine());
+
+                                var checkingDate = dayCalculation.IsFuture((DateTime)test.CompletionDate);
+                                test.InProgress = checkingDate;
+
+                                test.IsLate = dayCalculation.IsLate(test.StartLearningDate, test.CompletionDate, test.TimeToMaster);
+
+                                if (test.IsLate == true)
+                                {
+                                    Console.WriteLine("You didn't finish the topic within the estimated time!");
+                                }
+
+                                else if (test.IsLate == false)
+                                {
+                                    Console.WriteLine("You finished the topic in time!");
+                                }
+
+                            }
+
+                            TopicConnection.Topics.Add(test);
+                            TopicConnection.SaveChanges();
+
+                            Console.WriteLine("Your topic was saved to the learning diary!");
+                        }
+                        catch (FormatException)
                         {
-                            Console.WriteLine("You have finished the topic in time!");
+
+                            Console.WriteLine("Please write the your answer in the format that is instructed (inside parantheses). Press enter and start again.");
                         }
-
+                        break;
                     }
-
-
-                    TopicConnection.Topics.Add(test);
-                    TopicConnection.SaveChanges();
-
-                    Console.WriteLine("Your topic was saved to the learning diary!");
 
                 }
-
             }
 
-
-            void PrintTopics()
+            void PrintTopics() 
 
             {
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
@@ -151,7 +160,7 @@ namespace Learning_diary_Maria
 
             }
 
-            void SearchId(int search)
+            void SearchId(int search) // To-do: Lisää exception handling
             {
 
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
@@ -175,7 +184,7 @@ namespace Learning_diary_Maria
                 }
             }
 
-            void ChangeIdField(int search)
+            void ChangeIdField(int search) //To-do: Lisää exception handling
 
             {
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
@@ -272,7 +281,7 @@ namespace Learning_diary_Maria
                 }
             }
 
-            void DeleteId(int search)
+            void DeleteId(int search) 
 
             {
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
