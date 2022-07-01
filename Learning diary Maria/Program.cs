@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Learning_diary_Maria.Models;
 using ClassLibrary1;
-
+using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Learning_diary_Maria
 {
-    class Program
+   class Program
     {
 
-        static void Main(string[] args)
+       static async Task Main(string[] args)
         {
             Console.WriteLine("Write A, if you'd like to create a new topic to your learning diary.");
             Console.WriteLine("Write B, if you'd like to see all your topics and their contents.");
@@ -21,36 +22,38 @@ namespace Learning_diary_Maria
             
             string userInput = Console.ReadLine().ToLower();
       
-            if (userInput == "a")
-                {
-                    AddTopic();
-                }
-
+                if (userInput == "a")
+                    {
+                        AddTopic();
+                    }
 
                 else if (userInput == "b")
                 {
-                    PrintTopics();
+                   await PrintTopics();
+
                 }
 
                 else if (userInput == "c")
                 {
                     Console.WriteLine("What topic Id would you like to look for? Write a number, e.g. 5.");
-                    int search = Convert.ToInt32(Console.ReadLine()); //to-do: user input validation
-                    SearchId(search);
+                    int search = Convert.ToInt32(Console.ReadLine()); //to-do: user input validationgi
+
+
+                   await SearchId(search);
                 }
 
                 else if (userInput == "d")
                 {
                     Console.WriteLine("What topic Id would you like to change? Write a number, e.g. 5.");
                     int search = Convert.ToInt32(Console.ReadLine()); //to-do: user input validation
-                    ChangeIdField(search);
+                    await ChangeIdField(search);
                 }
 
                 else if (userInput == "e")
                 {
                     Console.WriteLine("What topic Id would you like to delete? Write a number, e.g. 5.");
                     int search = Convert.ToInt32(Console.ReadLine()); //To-do: user input validation
-                    DeleteId(search);
+                    await DeleteId(search);
                 }
 
                 else
@@ -62,8 +65,8 @@ namespace Learning_diary_Maria
             //*******METHODS**********
 
 
-            void AddTopic()
-            {
+           static async Task AddTopic()
+           {
 
 
 
@@ -73,8 +76,10 @@ namespace Learning_diary_Maria
                     while (true)
                     {
                         try
+
                         {
-                            Console.WriteLine("Enter the topic id number (e.g. 0): ");
+
+                             Console.WriteLine("Enter the topic id number (e.g. 0): ");
                             test.Id = int.Parse(Console.ReadLine());
 
                             Console.WriteLine("Enter the title of the topic: ");
@@ -114,7 +119,7 @@ namespace Learning_diary_Maria
                                 var checkingDate = dayCalculation.IsFuture((DateTime)test.CompletionDate);
                                 test.InProgress = checkingDate;
 
-                                test.IsLate = dayCalculation.IsLate(test.StartLearningDate, test.CompletionDate, test.TimeToMaster);
+                                test.IsLate = dayCalculation.IsLate((DateTime)test.StartLearningDate, (DateTime)test.CompletionDate, (int)test.TimeToMaster);
 
                                 if (test.IsLate == true)
                                 {
@@ -128,8 +133,8 @@ namespace Learning_diary_Maria
 
                             }
 
-                            TopicConnection.Topics.Add(test);
-                            TopicConnection.SaveChanges();
+                            TopicConnection.Add(test);
+                            TopicConnection.SaveChangesAsync();
 
                             Console.WriteLine("Your topic was saved to the learning diary!");
                         }
@@ -137,19 +142,26 @@ namespace Learning_diary_Maria
                         {
 
                             Console.WriteLine("Please write the your answer in the format that is instructed (inside parantheses). Press enter and start again.");
+                            continue;
                         }
-                        break;
+                        break; 
                     }
 
                 }
             }
 
-            void PrintTopics() 
+            static async Task PrintTopics() 
 
             {
+                //Stopwatch to see how much async was able to cut short the processing
+               // var timer = new Stopwatch();
+                //timer.Start();
+
+
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                 {
-                    var savedTopics = TopicConnection.Topics.OrderBy(topic => topic);
+
+                    var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
                     foreach (var topic in savedTopics)
                     {
                         Console.WriteLine("Topic Id: {0} \nTitle: {1}\nDescription: {2}\nEstimated time to master the topic in hours: {3}\nTime spent so far: {4}\nThe source of the topic: {5}\nYou started learning this topic on: {6}\nThe topic is finished studying: {7}\n",
@@ -158,21 +170,26 @@ namespace Learning_diary_Maria
 
                 }
 
+               // timer.Stop();
+                //TimeSpan timeTaken = timer.Elapsed;
+                //string foo = "Time taken: " + timeTaken.ToString(@"m\:ss\.fff");
+                //Console.WriteLine(foo);
+
             }
 
-            void SearchId(int search) // To-do: Lisää exception handling
+          static async Task SearchId(int search) // To-do: Lisää exception handling
             {
 
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                 {
-                    var savedTopics = TopicConnection.Topics.OrderBy(topic => topic);
+                    var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
                     if (savedTopics.Any(savedobject => savedobject.Id == search))
 
                     {
                         var searchId = savedTopics.Where(savedobject => savedobject.Id == search);
                         foreach (var topic in searchId)
                         {
-                            Console.WriteLine("The topic Id {0} was found, and it is connected to the topic called {1}", search, topic.Title);
+                            Console.WriteLine("The topic Id {0} was found, and it is connected to the topic called {1}", search, topic.Title); //Could there be a try catch for databases - if it doesn't have any data?
                         }
 
                     }
@@ -184,16 +201,16 @@ namespace Learning_diary_Maria
                 }
             }
 
-            void ChangeIdField(int search) //To-do: Lisää exception handling
+          static async Task ChangeIdField(int search) //To-do: Lisää exception handling
 
             {
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                 {
-                    var savedTopics = TopicConnection.Topics.OrderBy(topic => topic);
+                    var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
                     if (savedTopics.Any(savedobject => savedobject.Id == search))
 
                     {
-                        Console.WriteLine("What title would you like to switch?\nA- Topic title\nB- Topic description\nC- Estimated time to master\nD- Estimated new finishing date");
+                        Console.WriteLine("What field would you like to edit?\nA- Topic title\nB- Topic description\nC- Estimated time to master\nD- Estimated new finishing date");
                         char userInput = Convert.ToChar(Console.ReadLine().ToLower());
 
 
@@ -215,7 +232,7 @@ namespace Learning_diary_Maria
 
                         }
 
-                        TopicConnection.SaveChanges();
+                        TopicConnection.SaveChangesAsync();
 
                         if (userInput == 'b')
                         {
@@ -234,7 +251,7 @@ namespace Learning_diary_Maria
                         }
 
 
-                        TopicConnection.SaveChanges();
+                        TopicConnection.SaveChangesAsync();
 
                         if (userInput == 'c')
                         {
@@ -249,7 +266,7 @@ namespace Learning_diary_Maria
                             Console.WriteLine("Your topic id {0} estimated time to master has now been switched to {1}", changeEstimatedTime.Id, newEstimatedTime);
 
                         }
-                        TopicConnection.SaveChanges();
+                        TopicConnection.SaveChangesAsync();
 
 
                         if (userInput == 'd')
@@ -267,7 +284,7 @@ namespace Learning_diary_Maria
                                 Console.WriteLine("Your topic id {0} new estimated finishing date has now been switched to {1}", topic.Id, newFinishDate);
                             }
                         }
-                        TopicConnection.SaveChanges();
+                        TopicConnection.SaveChangesAsync();
 
 
                     }
@@ -281,12 +298,12 @@ namespace Learning_diary_Maria
                 }
             }
 
-            void DeleteId(int search) 
+         static async Task DeleteId(int search) 
 
             {
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                 {
-                    var savedTopics = TopicConnection.Topics.OrderBy(topic => topic);
+                    var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
                     if (savedTopics.Any(savedobject => savedobject.Id == search))
 
                     {
@@ -305,7 +322,7 @@ namespace Learning_diary_Maria
                       Console.WriteLine("The learning diary does not contain topics with that id :(");
                     }
 
-                    TopicConnection.SaveChanges();
+                    TopicConnection.SaveChangesAsync();
 
                 }
 
