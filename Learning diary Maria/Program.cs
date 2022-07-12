@@ -172,7 +172,9 @@ namespace Learning_diary_Maria
                             Console.WriteLine("Please write the your answer in the format that is instructed (inside parantheses). Press enter and start again.");
                             continue;
                         }
-                        break; 
+                        Console.WriteLine("Press any key to continue.");
+                        Console.ReadKey(true);
+                        break;
                     }
 
                 }
