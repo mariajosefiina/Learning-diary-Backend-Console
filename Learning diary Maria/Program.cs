@@ -14,53 +14,84 @@ namespace Learning_diary_Maria
 
        static async Task Main(string[] args)
         {
-            Console.WriteLine("Write A, if you'd like to create a new topic to your learning diary.");
-            Console.WriteLine("Write B, if you'd like to see all your topics and their contents.");
-            Console.WriteLine("Write C, if you'd like to search for a topic based on its topic Id.");
-            Console.WriteLine("Write D, if you'd like to change a field in a specific topic Id.");
-            Console.WriteLine("Write E, if you'd like to delete a topic based on its topic Id.");
-            
-            string userInput = Console.ReadLine().ToLower();
-      
-                if (userInput == "a")
+            bool programRunning = true;
+
+            while (programRunning)
+            {
+                Console.Clear();
+                Console.WriteLine("Write A, if you'd like to create a new topic to your learning diary.");
+                Console.WriteLine("Write B, if you'd like to see all your topics and their contents.");
+                Console.WriteLine("Write C, if you'd like to search for a topic based on its topic Id.");
+                Console.WriteLine("Write D, if you'd like to change a field in a specific topic Id.");
+                Console.WriteLine("Write E, if you'd like to delete a topic based on its topic Id.");
+                Console.WriteLine("Write X, if you'd like to exit the learning diary app.");
+                try
+                {
+                    string userInput = Console.ReadLine().ToLower();
+
+                    if (userInput == "a")
                     {
-                        AddTopic();
+                        await AddTopic();
+                        continue;
                     }
 
-                else if (userInput == "b")
-                {
-                   await PrintTopics();
+                    else if (userInput == "b")
+                    {
+                        await PrintTopics();
+                        continue;
 
+                    }
+
+                    else if (userInput == "c")
+                    {
+                        Console.WriteLine("What topic Id would you like to look for? Write a number, e.g. 5.");
+                        int search = Convert.ToInt32(Console.ReadLine());
+
+                        await SearchId(search);
+                        continue;
+                    }
+
+
+                    else if (userInput == "d")
+                    {
+
+                        Console.WriteLine("What topic Id would you like to change? Write a number, e.g. 5.");
+                        int search = Convert.ToInt32(Console.ReadLine());
+                        await ChangeIdField(search);
+                        continue;
+                    }
+
+
+                    else if (userInput == "e")
+                    {
+                        Console.WriteLine("What topic Id would you like to delete? Write a number, e.g. 5.");
+                        int search = Convert.ToInt32(Console.ReadLine());
+                        await DeleteId(search);
+                        continue;
+                    }
+
+                    else if (userInput == "x")
+                    {
+                        programRunning = false;
+                        break;
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Please write either A, B, C, D, E or X. Press enter to continue.");
+                        Console.ReadLine();
+                        continue;
+                    }
                 }
 
-                else if (userInput == "c")
+                catch (FormatException)
                 {
-                    Console.WriteLine("What topic Id would you like to look for? Write a number, e.g. 5.");
-                    int search = Convert.ToInt32(Console.ReadLine()); //to-do: user input validationgi
-
-
-                   await SearchId(search);
+                    Console.WriteLine("Please write a number in numeric form, such as 3.\n Press any key to continue.");
+                    Console.ReadKey(true);
+                    continue;
                 }
-
-                else if (userInput == "d")
-                {
-                    Console.WriteLine("What topic Id would you like to change? Write a number, e.g. 5.");
-                    int search = Convert.ToInt32(Console.ReadLine()); //to-do: user input validation
-                    await ChangeIdField(search);
-                }
-
-                else if (userInput == "e")
-                {
-                    Console.WriteLine("What topic Id would you like to delete? Write a number, e.g. 5.");
-                    int search = Convert.ToInt32(Console.ReadLine()); //To-do: user input validation
-                    await DeleteId(search);
-                }
-
-                else
-                {
-                    Console.WriteLine("Please write either A, B, C, D or E.");
-                }
-
+                break;
+            }
 
             //*******METHODS**********
 
@@ -69,16 +100,13 @@ namespace Learning_diary_Maria
            {
 
 
-
                 using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                 {
                     Models.Topic test = new Models.Topic();
                     while (true)
                     {
                         try
-
                         {
-
                              Console.WriteLine("Enter the topic id number (e.g. 0): ");
                             test.Id = int.Parse(Console.ReadLine());
 
@@ -134,7 +162,7 @@ namespace Learning_diary_Maria
                             }
 
                             TopicConnection.Add(test);
-                            TopicConnection.SaveChangesAsync();
+                           await TopicConnection.SaveChangesAsync();
 
                             Console.WriteLine("Your topic was saved to the learning diary!");
                         }
@@ -152,182 +180,210 @@ namespace Learning_diary_Maria
 
             static async Task PrintTopics() 
 
-            {
-                //Stopwatch to see how much async was able to cut short the processing
-               // var timer = new Stopwatch();
-                //timer.Start();
+            { // Is there any exception for checking if database table is empty?
 
-
-                using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
+                while (true)
                 {
-
-                    var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
-                    foreach (var topic in savedTopics)
+                    using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                     {
-                        Console.WriteLine("Topic Id: {0} \nTitle: {1}\nDescription: {2}\nEstimated time to master the topic in hours: {3}\nTime spent so far: {4}\nThe source of the topic: {5}\nYou started learning this topic on: {6}\nThe topic is finished studying: {7}\n",
-                                             topic.Id, topic.Title, topic.Description, topic.TimeToMaster, topic.TimeSpent, topic.Source, topic.StartLearningDate, topic.InProgress);
-                    }
 
+                        var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
+                        foreach (var topic in savedTopics)
+                        {
+                            Console.WriteLine(topic);
+                        }
+                    }
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey(true);
+                    break;
                 }
 
-               // timer.Stop();
-                //TimeSpan timeTaken = timer.Elapsed;
-                //string foo = "Time taken: " + timeTaken.ToString(@"m\:ss\.fff");
-                //Console.WriteLine(foo);
-
+          
             }
 
-          static async Task SearchId(int search) // To-do: Lisää exception handling
+          static async Task SearchId(int search)
             {
-
-                using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
+                while (true)
                 {
-                    var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
-                    if (savedTopics.Any(savedobject => savedobject.Id == search))
-
+                    try
                     {
-                        var searchId = savedTopics.Where(savedobject => savedobject.Id == search);
-                        foreach (var topic in searchId)
+                        using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                         {
-                            Console.WriteLine("The topic Id {0} was found, and it is connected to the topic called {1}", search, topic.Title); //Could there be a try catch for databases - if it doesn't have any data?
+                            var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
+                            if (savedTopics.Any(savedobject => savedobject.Id == search))
+
+                            {
+                                var searchId = savedTopics.Where(savedobject => savedobject.Id == search);
+                                foreach (var topic in searchId)
+                                {
+                                    Console.WriteLine("The topic Id {0} was found, and it has the following information \n{1}", search, topic);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("The learning diary does not contain topics with that id :(");
+                            }
                         }
-
                     }
-                    else
+                    catch (Exception e)
                     {
-                        Console.WriteLine("The learning diary does not contain topics with that id :(");
+                        Console.WriteLine(e.Message);
                     }
 
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey(true);
+                    break;
                 }
             }
 
-          static async Task ChangeIdField(int search) //To-do: Lisää exception handling
+
+          static async Task ChangeIdField(int search) 
 
             {
-                using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
+                while (true)
                 {
-                    var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
-                    if (savedTopics.Any(savedobject => savedobject.Id == search))
-
+                    try
                     {
-                        Console.WriteLine("What field would you like to edit?\nA- Topic title\nB- Topic description\nC- Estimated time to master\nD- Estimated new finishing date");
-                        char userInput = Convert.ToChar(Console.ReadLine().ToLower());
-
-
-                        if (userInput == 'a')
+                        using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                         {
-                            Console.WriteLine("What do you want to change the title to?");
-                            string newTitle = Console.ReadLine();
+                            var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
+                            if (savedTopics.Any(savedobject => savedobject.Id == search))
 
-                            var changeTitle =
-                                                from savedobject in TopicConnection.Topics
-                                                where savedobject.Id == search
-                                                select savedobject;
-
-                            foreach (Models.Topic topic in changeTitle)
                             {
-                                topic.Title = newTitle;
-                                Console.WriteLine("Your topic id {0} title was changed to {1}", topic.Id, newTitle);
+                                Console.WriteLine("What field would you like to edit?\nA- Topic title\nB- Topic description\nC- Estimated time to master\nD- Estimated new finishing date");
+                                char userInput = Convert.ToChar(Console.ReadLine().ToLower());
+
+
+                                if (userInput == 'a')
+                                {
+                                    Console.WriteLine("What do you want to change the title to?");
+                                    string newTitle = Console.ReadLine();
+
+                                    var changeTitle =
+                                                        from savedobject in TopicConnection.Topics
+                                                        where savedobject.Id == search
+                                                        select savedobject;
+
+                                    foreach (Models.Topic topic in changeTitle)
+                                    {
+                                        topic.Title = newTitle;
+                                        Console.WriteLine("Your topic id {0} title was changed to {1}", topic.Id, newTitle);
+                                    }
+
+                                }
+
+                                await TopicConnection.SaveChangesAsync();
+
+                                if (userInput == 'b')
+                                {
+                                    Console.WriteLine("What do you want to change the description to?");
+                                    string newDescription = Console.ReadLine();
+
+                                    var changeDescription = from savedobject in TopicConnection.Topics
+                                                            where savedobject.Id == search
+                                                            select savedobject;
+
+                                    foreach (Models.Topic topic in changeDescription)
+                                    {
+                                        topic.Description = newDescription;
+                                        Console.WriteLine("Your topic id {0} description has now been switched to {1}", topic.Id, newDescription);
+                                    }
+                                }
+
+
+                                await TopicConnection.SaveChangesAsync();
+
+                                if (userInput == 'c')
+                                {
+                                    //!Would it have been a smoother execution to put this code bit in the very beginning: TopicConnection.Topics.Where(topic => topic.Id == search).Single();
+                                    // And afterwards do each field like I've done it here -> now my a b d options have a bit too many code rows that could be eliminated (although I enjoyed trying out different LINQ versions)?
+
+                                    Console.WriteLine("What is the new estimated time to study this topic? (in days, e.g. 8)");
+                                    int newEstimatedTime = Convert.ToInt32(Console.ReadLine());
+
+                                    var changeEstimatedTime = TopicConnection.Topics.Where(topic => topic.Id == search).Single();
+                                    changeEstimatedTime.TimeToMaster = newEstimatedTime;
+                                    Console.WriteLine("Your topic id {0} estimated time to master has now been switched to {1}", changeEstimatedTime.Id, newEstimatedTime);
+
+                                }
+                                await TopicConnection.SaveChangesAsync();
+
+
+                                if (userInput == 'd')
+                                {
+                                    Console.WriteLine("When is the new estimated finishing date?");
+                                    DateTime newFinishDate = DateTime.Parse(Console.ReadLine());
+
+                                    var changeFinishDate = from savedobject in TopicConnection.Topics
+                                                           where savedobject.Id == search
+                                                           select savedobject;
+
+                                    foreach (Models.Topic topic in changeFinishDate)
+                                    {
+                                        topic.CompletionDate = newFinishDate;
+                                        Console.WriteLine("Your topic id {0} new estimated finishing date has now been switched to {1}", topic.Id, newFinishDate);
+                                    }
+                                }
+                                await TopicConnection.SaveChangesAsync();
                             }
-
-                        }
-
-                        TopicConnection.SaveChangesAsync();
-
-                        if (userInput == 'b')
-                        {
-                            Console.WriteLine("What do you want to change the description to?");
-                            string newDescription = Console.ReadLine();
-
-                            var changeDescription = from savedobject in TopicConnection.Topics
-                                                    where savedobject.Id == search
-                                                    select savedobject;
-
-                            foreach (Models.Topic topic in changeDescription)
+                            else
                             {
-                                topic.Description = newDescription;
-                                Console.WriteLine("Your topic id {0} description has now been switched to {1}", topic.Id, newDescription);
+                                Console.WriteLine("The learning diary does not contain topics with that id :(");
                             }
                         }
-
-
-                        TopicConnection.SaveChangesAsync();
-
-                        if (userInput == 'c')
-                        {
-                            //! Here I would like to receive comments: Would it have been a smoother execution to put this code bit in the very beginnig: TopicConnection.Topics.Where(topic => topic.Id == search).Single();
-                            // And afterwards do each field like I've done it here -> now my a b d options have a bit too many code rows that could be eliminated (although I enjoyed trying out different LINQ versions)?
-
-                            Console.WriteLine("What is the new estimated time to study this topic?");
-                            int newEstimatedTime = Convert.ToInt32(Console.ReadLine());
-
-                            var changeEstimatedTime = TopicConnection.Topics.Where(topic => topic.Id == search).Single();
-                            changeEstimatedTime.TimeToMaster = newEstimatedTime;
-                            Console.WriteLine("Your topic id {0} estimated time to master has now been switched to {1}", changeEstimatedTime.Id, newEstimatedTime);
-
-                        }
-                        TopicConnection.SaveChangesAsync();
-
-
-                        if (userInput == 'd')
-                        {
-                            Console.WriteLine("When is the new estimated finishing date?");
-                            DateTime newFinishDate = DateTime.Parse(Console.ReadLine());
-
-                            var changeFinishDate = from savedobject in TopicConnection.Topics
-                                                   where savedobject.Id == search
-                                                   select savedobject;
-
-                            foreach (Models.Topic topic in changeFinishDate)
-                            {
-                                topic.CompletionDate = newFinishDate;
-                                Console.WriteLine("Your topic id {0} new estimated finishing date has now been switched to {1}", topic.Id, newFinishDate);
-                            }
-                        }
-                        TopicConnection.SaveChangesAsync();
-
-
                     }
-                    else
+                    catch (Exception e)
                     {
-                        Console.WriteLine("The learning diary does not contain topics with that id :(");
+                        Console.WriteLine(e.Message);
                     }
 
-
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey(true);
+                    break;
+                }
 
                 }
-            }
 
          static async Task DeleteId(int search) 
 
             {
-                using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
+                while (true)
                 {
-                    var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
-                    if (savedTopics.Any(savedobject => savedobject.Id == search))
-
+                    try
                     {
-                        var removeTopic = from savedobject in TopicConnection.Topics
-                                               where savedobject.Id == search
-                                               select savedobject;
-                        foreach (Models.Topic topic in removeTopic)
+                        using (LearningDiaryContext TopicConnection = new LearningDiaryContext())
                         {
-                            TopicConnection.Topics.Remove(topic);
-                            Console.WriteLine("The topic Id {0} has now been removed.", search);
+                            var savedTopics = await Task.Run(() => TopicConnection.Topics.OrderBy(topic => topic));
+                            if (savedTopics.Any(savedobject => savedobject.Id == search))
+
+                            {
+                                var removeTopic = from savedobject in TopicConnection.Topics
+                                                  where savedobject.Id == search
+                                                  select savedobject;
+                                foreach (Models.Topic topic in removeTopic)
+                                {
+                                    TopicConnection.Topics.Remove(topic);
+                                    Console.WriteLine("The topic Id {0} has now been removed.", search);
+                                }
+                            }
+
+                            else
+                            {
+                                Console.WriteLine("The learning diary does not contain topics with that id :(");
+                            }
+
+                            await TopicConnection.SaveChangesAsync();
+
                         }
                     }
-
-                    else
+                    catch (Exception e)
                     {
-                      Console.WriteLine("The learning diary does not contain topics with that id :(");
+                        Console.WriteLine(e.Message);
                     }
-
-                    TopicConnection.SaveChangesAsync();
-
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey(true);
+                    break;
                 }
-
-
-
             }
         }
     } 
